@@ -1,0 +1,43 @@
+Welcome to a short presentation covering the needlebench Benchmarking Framework. My name is Lukas Czurgel, and im here to answer the question, if LLMs, can indeed do retrieval in information dense contexts.
+
+We are going to cover some background information about the nature of context windows of transformer models and why we care about them, briefly cover some related works, including the titular needle in a haystack test and then jump into the needle bench framework and its findings.
+
+So, what even is a context window? In the context of transformer models, which is the underlying architecture of most modern LLMs The context window or context size, is the maximal amount of tokens the model can consider at one time and can be thought of as the models working memory.
+
+It contains the users promp, the system prompt, the output and any additional documents supplied to the model. The context size along side the parameter count are common hallmarks of transformer models. Googles Gemini 1.5 for instance prides itself on its 1 million token context window. More on that later on.
+
+But regardless on how large the window professes to be, the context size is still limited. For this reason we employ techniques such as RAG, Retrieval augmented generation, to pre-select the most relevant chunks of tokens for a given prompt, to optimize the usage of our context window.
+
+We kind of already touched on it, but there are a number of reasons why we might want to have models with large context windows. RAG Systems can include more fine grain data, chat applications can keep longer conversations in mind  before "forgetting" earlier exchanges, and of course, it allows us to make longer prompts and generate larger outputs. In some applications, you could even forgo a RAG pipeline completely, and inject your entire knowledge base into each individual prompt.
+
+As a result, context sizes have been exploding over the last couple of years. While GPT-1 released in 2019 with a mere 512 token capacity, Googles Gemini blew that out of the water in 2024, tauting 1 Million tokens and The release of Metas LlAMA 4 series in April cracking the 10 Million token limit.  
+
+There are some notable downsides to increased context sizes however. For one, due to the nature of the transformer architecture, larger context sizes require proportionally much more computing resources and are thus much more expensive to train and operate. There are a number of performance issues when working with these larger context sizes, and papers such as LongSafetyBench shine a light on safety concerns with these new models.
+
+Given these downsides, are large context sizes even worth it? To be able to answer that question, we first need to find a way to evaluate these models in large context applications. The questions becomes How do we evaluate long context LLMs?
+
+The Answer: We search for the needle in the Haystack!  
+
+Now you might be asking yourself, what does a haystack have to do with machine learning
+The terminology got started with the apply named NIAH or needle in a haystack test developed by Greg kamrath. Based on his methodology a number of different benchmark frameworks have been developed over the last couple of years. Each of these focus on slightly different aspects of model performance and I will be highlighting three of them today. 
+
+Starting out with the original NIAH Test which will serve as the baseline to better understand the terminology and associated concepts when moving forward. What you can see here in is the LangChain implementation of the Test. We begin, by inserting a needle, a synthetic sentence or statement into a body of unrelated text, the haystack. Kamrath used paul graham essays to construct his stacks. We then hand this document to our model and prompt it with a question about the needle. Based on the number of correctly answered questions we can then compute a test score. These test are performed across ascending context/document sizes, as well as with different needle placement and count. 
+
+(potential mention of lost in the middle)
+
+Building on these concepts Hsieh et al published their Needle Benchmark in 2024. Their goal was to create a bench marking framework incorporates both classic retrial tasks with low information density similar to those found in Ruler, as well as high information density, synthetic reasoning tasks emulating the real world applications found in the Long bench approach. They wanted to have a salable test model, that non-the less did not rely on excessive filler content. To achieve this, they utilize four different tests across two categories. 
+
+...
+
+Which brings us to the Needlebench framework. published in May by MO Li et al
+Their goal was to create a bench marking framework incorporates both classic retrial tasks with low information density similar to those found in Ruler, as well as high information density, synthetic reasoning tasks emulating the real world applications found in the Long bench approach. They wanted to have a scale able test model, that non-the less did not rely on excessive filler content. To achieve this, they utilize four different tests split into two categories. 
+
+The first one being information sparse
+
+
+
+
+Ruler: adaptive length do to irrelevant filler text
+Longbench fixed length real world text, that lack adaptability / scalability  
+ 
+NeedleBench: The authors attempt to combine the strengths of the previous approaches to     
